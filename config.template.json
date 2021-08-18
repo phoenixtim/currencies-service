@@ -1,0 +1,4 @@
+{
+  "DEBUG": true,
+  "LOGS_FOLDER_PATH": "./logs"
+}
