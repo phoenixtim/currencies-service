@@ -9,6 +9,7 @@
   "author": "Artem Apartsev",
   "license": "MIT",
   "dependencies": {
+    "mongoose": "^5.13.7",
     "winston": "^3.3.3"
   },
   "devDependencies": {

@@ -1,4 +1,9 @@
 {
   "DEBUG": true,
-  "LOGS_FOLDER_PATH": "./logs"
+  "LOGS_FOLDER_PATH": "./logs",
+  "MONGODB": {
+    "url": "mongodb://127.0.0.1:27017/currencyExchangeRates",
+    "reconnectTries": 5,
+    "reconnectInterval": 5
+  }
 }
