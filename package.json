@@ -9,8 +9,10 @@
   "author": "Artem Apartsev",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.21.1",
     "mongoose": "^5.13.7",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
