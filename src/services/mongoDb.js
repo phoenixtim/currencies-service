@@ -17,6 +17,8 @@ async function connect() {
 }
 module.exports.connect = connect
 
+module.exports.disconnect = mongoose.disconnect
+
 mongoose.connection.on('error', err => {
   log(LOG_LEVELS.error, err)
 })
