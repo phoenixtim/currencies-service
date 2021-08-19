@@ -5,7 +5,7 @@
     "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 2019
+    "ecmaVersion": 2021
   },
   "plugins": [
     "jsdoc"
@@ -86,6 +86,7 @@
           "err"
         ]
       }
-    ]
+    ],
+    "max-classes-per-file": "off"
   }
 }
