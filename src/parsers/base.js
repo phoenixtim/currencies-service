@@ -9,6 +9,14 @@ class BaseParser {
       buy: 'buy',
       sell: 'sell',
     }
+    /** @protected */
+    this.bank = {}
+    /** @protected */
+    this.logAdditionalData = {
+      level: LOG_LEVELS.error,
+      module: 'parsers',
+      parser: 'BaseParser',
+    }
   }
 
   /** @virtual */
@@ -27,6 +35,12 @@ class BaseParser {
     await Promise.all(exchangeRates.map(
       exchangeRate => ExchangeRatesRepository.upsert(exchangeRate),
     ))
+
+    log({
+      ...this.logAdditionalData,
+      level: LOG_LEVELS.info,
+      message: `Exchange rates from bank ${this.bank?.id} (${this.bank?.name}) saved`,
+    })
   }
 }
 module.exports.BaseParser = BaseParser
