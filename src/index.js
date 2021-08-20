@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 
+const apiRouter = require('./api')
 const { errorsMiddleware } = require('./middlewares')
 const { connect: connectDb } = require('./services/mongoDb')
 const { HOST, PORT } = require('./utils/config')
@@ -10,6 +11,7 @@ const app = new Koa()
 
 app.use(errorsMiddleware)
 app.use(bodyParser())
+app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
 async function run() {
   await connectDb()

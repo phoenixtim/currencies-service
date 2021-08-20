@@ -10,10 +10,13 @@
   "author": "Artem Apartsev",
   "license": "MIT",
   "dependencies": {
+    "@koa/router": "^10.1.0",
     "argparse": "^2.0.1",
     "axios": "^0.21.1",
+    "joi": "^17.4.2",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
+    "koa-joi-validate-middleware": "^1.1.7",
     "mongoose": "^5.13.7",
     "winston": "^3.3.3",
     "xml-js": "^1.6.11"
