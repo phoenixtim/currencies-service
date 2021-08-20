@@ -14,4 +14,11 @@ module.exports = {
       exchangeRatesUrl: 'http://www.cbr.ru/scripts/XML_daily.asp',
     },
   },
+
+  API: {
+    LIMIT: {
+      MAX: 100,
+      DEFAULT: 50,
+    },
+  },
 }
