@@ -1,6 +1,6 @@
 {
   "name": "currency-service",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Service to collect currency exchange rate and convert currencies",
   "main": "src/index.js",
   "scripts": {
