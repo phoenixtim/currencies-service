@@ -22,6 +22,18 @@ const { Schema } = mongoose
  * }} ExchangeRateSpecificValues
  */
 /** @typedef {(MongoRepositoryItemValues & ExchangeRateSpecificValues)} ExchangeRateValues */
+/**
+ * @typedef {{
+ *  bank?: string,
+ *  currencyBase?: string | string[],
+ *  currencyTarget?: string | string[],
+ *  price?: {
+ *    buy?: number,
+ *    sell?: number,
+ *  },
+ * }} ExchangeRateSpecificFilter
+ */
+/** @typedef {(MongoRepositoryItemValues & ExchangeRateSpecificFilter)} ExchangeRateFilter */
 /** @typedef {(DocumentType & ExchangeRateSpecificValues)} ExchangeRateDocument */
 /** @typedef {(MongoRepositoryItem & ExchangeRateSpecificValues)} ExchangeRateType */
 
@@ -69,7 +81,7 @@ class ExchangeRatesRepository extends MongoRepository {
   }
 
   /**
-   * @param {ExchangeRateValues} filter
+   * @param {ExchangeRateFilter} filter
    * @returns {Promise<ExchangeRateType>}
    */
   static async findOne(filter) {
@@ -80,12 +92,12 @@ class ExchangeRatesRepository extends MongoRepository {
 
   /**
    * @param {object} params
-   * @param {ExchangeRateValues} params.filter
-   * @param {number} params.limit
-   * @param {number} params.offset
+   * @param {ExchangeRateFilter=} params.filter
+   * @param {number=} params.limit
+   * @param {number=} params.offset
    * @returns {Promise<ExchangeRateType[]>}
    */
-  static async find({ filter, limit, offset }) {
+  static async find({ filter, limit, offset } = {}) {
     const exchangeRates = await ExchangeRate.find(
       ExchangeRatesRepository.formatFilter(filter),
       undefined,
@@ -100,10 +112,10 @@ class ExchangeRatesRepository extends MongoRepository {
   }
 
   /**
-   * @param {ExchangeRateValues} filter
+   * @param {ExchangeRateFilter} filter
    * @returns {Promise<number>}
    */
-  static async count(filter) {
+  static async count(filter = {}) {
     const exchangeRatesNumber = await ExchangeRate.countDocuments(
       ExchangeRatesRepository.formatFilter(filter),
     )
@@ -122,13 +134,17 @@ class ExchangeRatesRepository extends MongoRepository {
 
   /**
    * @protected
-   * @param {ExchangeRateValues} filter
+   * @param {ExchangeRateFilter} filter
    */
-  static formatFilter({ bank, currencyBase, currencyTarget }) {
+  static formatFilter({ bank, currencyBase, currencyTarget } = {}) {
     const filter = {}
     if (bank) filter.bank = bank
-    if (currencyBase) filter.$or = [{ currencyBase }]
-    if (currencyTarget) filter.$or = [...(filter.$or || []), { currencyTarget }]
+    if (currencyBase) {
+      filter.currencyBase = ExchangeRatesRepository.formatArrayForFilter(currencyBase)
+    }
+    if (currencyTarget) {
+      filter.currencyTarget = ExchangeRatesRepository.formatArrayForFilter(currencyTarget)
+    }
 
     return filter
   }

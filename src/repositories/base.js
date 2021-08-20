@@ -61,5 +61,15 @@ class MongoRepository extends BaseRepository {
 
     return formattedItem
   }
+
+  /**
+   * @protected
+   * @param {any | any[]} value
+   */
+  static formatArrayForFilter(value) {
+    if (!Array.isArray(value)) return value
+
+    return { $in: value }
+  }
 }
 module.exports.MongoRepository = MongoRepository
