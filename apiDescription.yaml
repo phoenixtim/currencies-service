@@ -1,0 +1,160 @@
+openapi: '3.0.2'
+info:
+  title: Currency service
+  version: '1.0'
+
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /banks:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/Country'
+      responses:
+        '200':
+          $ref: '#/components/responses/BanksResponse'
+  
+  /currencies/exchange-rates:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/BankId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExchangeRatesResponse'
+  /currencies/convert:
+    put:
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ConvertBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/ConvertResponse'
+
+components:
+
+  parameters:
+    BankId:
+      name: bank_id
+      in: query
+      required: false
+      description: Идентификатор банка
+      schema:
+        type: string
+    Country:
+      name: country
+      in: query
+      required: false
+      description: Код страны в формате ISO 3166-1 alpha-2
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Максимальное количество элементов, полученных в ответе
+      schema:
+        type: integer
+        default: 50
+        maximum: 100
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Сколько элементов пропустить, начиная с первого найденного
+      schema:
+        type: integer
+        default: 0
+
+  schemas:
+    ExchangeRate:
+      type: object
+      properties:
+        bank:
+          type: string
+        currencyBase:
+          type: string
+        currencyTarget:
+          type: string
+        price:
+          type: object
+          properties:
+            buy:
+              type: number
+            sell:
+              type: number
+    Bank:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        countryCode:
+          type: string
+
+    ConvertBody:
+      type: object
+      required:
+        - currency_from
+        - currency_to
+      properties:
+        currency_from:
+          type: string
+        currency_to:
+          type: string
+        amount:
+          type: number
+          default: 1
+        bank_id:
+          type: string
+          default: TH
+
+  responses:
+    ExchangeRatesResponse:
+      description: Список курсов обмена валют
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExchangeRate'
+    BanksResponse:
+      description: Список банков
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bank'
+    ConvertResponse:
+      description: Возвращает количество новой валюты, которое можно получить из указанного количества исходной валюты
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  amount:
+                    type: number
