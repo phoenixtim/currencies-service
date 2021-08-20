@@ -60,6 +60,8 @@ const exchangeRateSchema = new Schema({
 }, {
   timestamps: true,
 })
+// Можно было бы ещё добавить в модель время жизни, на случай, если новые данные не придут. Чтобы не
+//  выдавать (и не конвертировать) неактуальные данные по валютам.
 
 const ExchangeRate = mongoose.model('ExchangeRate', exchangeRateSchema)
 
