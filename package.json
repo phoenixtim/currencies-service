@@ -2,8 +2,9 @@
   "name": "currency-service",
   "version": "0.0.0",
   "description": "Service to collect currency exchange rate and convert currencies",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Artem Apartsev",
@@ -11,6 +12,8 @@
   "dependencies": {
     "argparse": "^2.0.1",
     "axios": "^0.21.1",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
     "mongoose": "^5.13.7",
     "winston": "^3.3.3",
     "xml-js": "^1.6.11"

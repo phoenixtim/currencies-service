@@ -1,5 +1,7 @@
 {
   "DEBUG": true,
+  "HOST": "127.0.0.1",
+  "PORT": 3000,
   "LOGS_FOLDER_PATH": "./logs",
   "MONGODB": {
     "url": "mongodb://127.0.0.1:27017/currencyExchangeRates",

@@ -1,11 +1,22 @@
-const {  } = require('./utils/config')
-const { connect: connectDb, disconnect: disconnectDb } = require('./services/mongoDb')
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+
+const { errorsMiddleware } = require('./middlewares')
+const { connect: connectDb } = require('./services/mongoDb')
+const { HOST, PORT } = require('./utils/config')
 const { log, LOG_LEVELS } = require('./utils/logging')
+
+const app = new Koa()
+
+app.use(errorsMiddleware)
+app.use(bodyParser())
 
 async function run() {
   await connectDb()
 
-  await disconnectDb()
+  app.listen(PORT, HOST, () => {
+    log(LOG_LEVELS.info, `Service started on http://${HOST}:${PORT}`)
+  })
 }
 
 run()
