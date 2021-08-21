@@ -6,6 +6,7 @@
 
 const mongoose = require('mongoose')
 
+const { EXCHANGE_RATES } = require('../utils/config')
 const { MongoRepository } = require('./base')
 
 const { Schema } = mongoose
@@ -60,10 +61,29 @@ const exchangeRateSchema = new Schema({
 }, {
   timestamps: true,
 })
-// Можно было бы ещё добавить в модель время жизни, на случай, если новые данные не придут. Чтобы не
-//  выдавать (и не конвертировать) неактуальные данные по валютам.
+
+// Время жизни, на случай, если новые данные не придут. Чтобы не выдавать (и не конвертировать)
+//  неактуальные данные по валютам.
+// Можно было сделать его выставлением флага в модели, вместо удаления, но, для простоты -
+//  сделал так.
+const ttlIndexName = 'updatedAt_ttl_1'
+const ttlInSeconds = EXCHANGE_RATES.TTL * 60 * 60
+if (EXCHANGE_RATES.TTL) {
+  exchangeRateSchema.index({ updatedAt: 1 }, {
+    name: ttlIndexName,
+    expires: ttlInSeconds,
+  })
+}
 
 const ExchangeRate = mongoose.model('ExchangeRate', exchangeRateSchema)
+
+ExchangeRate.listIndexes(async (_, createdIndexes) => {
+  const ttlIndex = createdIndexes.find(({ name }) => name === ttlIndexName)
+  if (ttlIndex && ttlIndex.expireAfterSeconds !== ttlInSeconds) {
+    await ExchangeRate.collection.dropIndex(ttlIndexName)
+    await ExchangeRate.syncIndexes()
+  }
+})
 
 class ExchangeRatesRepository extends MongoRepository {
   /**
