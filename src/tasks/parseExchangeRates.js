@@ -2,6 +2,7 @@ const { ArgumentParser } = require('argparse')
 
 const { BANKS } = require('../constants')
 const { parser: bankOfThailandParser } = require('../parsers/bankOfThailand')
+const { parser: centralBankRfParser } = require('../parsers/centralBankRF')
 const { connect: connectDb, disconnect: disconnectDb } = require('../services/mongoDb')
 const { log, LOG_LEVELS } = require('../utils/logging')
 
@@ -22,6 +23,7 @@ function getParser(bankId) {
   let parser
   switch (bankId) {
     case BANKS.TH.id: parser = bankOfThailandParser; break
+    case BANKS.RU.id: parser = centralBankRfParser; break
     default:
       log(LOG_LEVELS.error, `Unknown bank ID ${bankId}`)
       break
