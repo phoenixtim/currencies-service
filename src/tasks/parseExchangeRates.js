@@ -6,13 +6,17 @@ const { parser: centralBankRfParser } = require('../parsers/centralBankRF')
 const { connect: connectDb, disconnect: disconnectDb } = require('../services/mongoDb')
 const { log, LOG_LEVELS } = require('../utils/logging')
 
+const BANK_IDS = Object.values(BANKS).map(({ id }) => id)
+
 const argsParser = new ArgumentParser({
   description: 'Script to parse currency exchange rate of specified banks',
 })
 argsParser.add_argument('-b', '--banks', {
-  help: 'bank IDs separated by whitespace',
+  help: `bank IDs separated by whitespace. Available values: ${BANK_IDS.join(', ')}.`,
   nargs: '+',
   metavar: 'BANK_ID',
+  choices: BANK_IDS,
+  required: true,
 })
 
 /**
