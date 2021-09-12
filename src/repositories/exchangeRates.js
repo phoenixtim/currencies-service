@@ -78,7 +78,9 @@ if (EXCHANGE_RATES.TTL) {
 const ExchangeRate = mongoose.model('ExchangeRate', exchangeRateSchema)
 
 ExchangeRate.listIndexes(async (_, createdIndexes) => {
-  const ttlIndex = createdIndexes.find(({ name }) => name === ttlIndexName)
+  const ttlIndex = createdIndexes ?
+    createdIndexes.find(({ name }) => name === ttlIndexName) :
+    undefined
   if (ttlIndex && ttlIndex.expireAfterSeconds !== ttlInSeconds) {
     await ExchangeRate.collection.dropIndex(ttlIndexName)
     await ExchangeRate.syncIndexes()
